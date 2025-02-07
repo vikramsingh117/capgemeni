@@ -1,89 +1,67 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FaHome, FaBoxOpen, FaUser, FaChartBar, FaBookOpen, FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState("Dashboard");
   const [isProductManagementOpen, setIsProductManagementOpen] = useState(false);
-
-  const handleClick = (item) => {
-    setActiveItem(item);
-    // Close Product Management menu when another item is clicked
-    if (item !== "Product Management") {
-      setIsProductManagementOpen(false);
-    }
-  };
+  const location = useLocation();
 
   const toggleProductManagement = () => {
     setIsProductManagementOpen(!isProductManagementOpen);
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div className="w-64 h-screen bg-red-700 text-white p-4">
       <h2 className="text-xl font-bold mb-4">Dashboard</h2>
       <ul className="space-y-2">
-        {/* Dashboard */}
-        <li
-          className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Dashboard" ? "bg-red-600" : "hover:bg-red-600"}`}
-          onClick={() => handleClick("Dashboard")}
-        >
-          <FaHome />
-          <span>Dashboard</span>
+        <li className={`p-2 rounded flex items-center space-x-2 transition ${isActive("/") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+          <Link to="/" className="flex items-center space-x-2 w-full">
+            <FaHome />
+            <span>Dashboard</span>
+          </Link>
         </li>
 
-        {/* Product Management (with subfolders) */}
-        <li
-          className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Product Management" ? "bg-red-600" : "hover:bg-red-600"}`}
-          onClick={toggleProductManagement}
-        >
-          <FaBoxOpen />
-          <span>Product Management</span>
+        <li className="p-2 rounded hover:bg-red-600 cursor-pointer flex items-center justify-between" onClick={toggleProductManagement}>
+          <div className="flex items-center space-x-2">
+            <FaBoxOpen />
+            <span>Product Management</span>
+          </div>
           {isProductManagementOpen ? <FaCaretUp /> : <FaCaretDown />}
         </li>
-        {isProductManagementOpen && (
-          <ul className="space-y-2 pl-6">
-            <li
-              className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Product" ? "bg-red-600" : "hover:bg-red-600"}`}
-              onClick={() => handleClick("Product")}
-            >
-              <span>Product</span>
-            </li>
-            <li
-              className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Create Product" ? "bg-red-600" : "hover:bg-red-600"}`}
-              onClick={() => handleClick("Create Product")}
-            >
-              <span>Create Product</span>
-            </li>
-            <li
-              className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Categories" ? "bg-red-600" : "hover:bg-red-600"}`}
-              onClick={() => handleClick("Categories")}
-            >
-              <span>Categories</span>
-            </li>
-          </ul>
-        )}
 
-        {/* Other items */}
-        <li
-          className={`flex items-center space-x-2 p-2 rounded ${activeItem === "User Management" ? "bg-red-600" : "hover:bg-red-600"}`}
-          onClick={() => handleClick("User Management")}
-        >
-          <FaUser />
-          <span>User Management</span>
+        <ul className={`pl-6 overflow-hidden transition-all ${isProductManagementOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}>
+          <li className={`p-2 rounded transition ${isActive("/products") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+            <Link to="/products">Products</Link>
+          </li>
+          <li className={`p-2 rounded transition ${isActive("/categories") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+            <Link to="/categories">Categories</Link>
+          </li>
+        </ul>
+
+        <li className={`p-2 rounded flex items-center space-x-2 transition ${isActive("/user-management") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+          <Link to="/user-management" className="flex items-center space-x-2 w-full">
+            <FaUser />
+            <span>User Management</span>
+          </Link>
         </li>
-        <li
-          className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Lead Management" ? "bg-red-600" : "hover:bg-red-600"}`}
-          onClick={() => handleClick("Lead Management")}
-        >
-          <FaChartBar />
-          <span>Lead Management</span>
+
+
+        <li className={`p-2 rounded flex items-center space-x-2 transition ${isActive("/training") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+          <Link to="/training" className="flex items-center space-x-2 w-full">
+            <FaBookOpen />
+            <span>Training</span>
+          </Link>
         </li>
-        <li
-          className={`flex items-center space-x-2 p-2 rounded ${activeItem === "Training" ? "bg-red-600" : "hover:bg-red-600"}`}
-          onClick={() => handleClick("Training")}
-        >
-          <FaBookOpen />
-          <span>Training</span>
+
+        <li className={`p-2 rounded flex items-center space-x-2 transition ${isActive("/lead-management") ? "bg-red-900 border-l-4 border-white" : "hover:bg-red-600"}`}>
+          <Link to="/lead-management" className="flex items-center space-x-2 w-full">
+            <FaChartBar />
+            <span>Lead Management</span>
+          </Link>
         </li>
+
       </ul>
     </div>
   );
